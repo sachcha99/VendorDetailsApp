@@ -33,6 +33,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import validator from 'validator';
 const Alert = React.forwardRef(function Alert(
     props,
     ref,
@@ -99,29 +100,38 @@ const EditVendorDetails = ({ id, toggle, setToggle }) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         if (data.get('name') && data.get('vid') && data.get('address') && data.get('phone') && data.get('email') && product) {
-            let body = {
-                name: personalDetails.name,
-                vendorId: personalDetails.vid,
-                registeredDate: new Date(),
-                contactNo: personalDetails.phone,
-                address: personalDetails.address,
-                email: personalDetails.email,
-                product: product,
-            }
-            try {
-                const result = await axios.put(`http://localhost:5000/vendor/update/${id}`, body)
-                setPersonalDetails({
-                    name: "",
-                    vid: "",
-                    phone: "",
-                    address: "",
-                    email: ""
-                })
-                setProduct([{ "pid": '', "pcode": '', "pname": '', "type": '' }])
-                setToggle(!toggle)
-                handleClose();
-            } catch (error) {
-                console.log(error)
+            if (!validator.isEmail(data.get('email'))) {
+                setErrorMsg("Enter valid email address")
+                handleError()
+            } else {
+                let body = {
+                    name: personalDetails.name,
+                    vendorId: personalDetails.vid,
+                    registeredDate: new Date(),
+                    contactNo: personalDetails.phone,
+                    address: personalDetails.address,
+                    email: personalDetails.email,
+                    product: product,
+                }
+                try {
+                    const result = await axios.put(`http://localhost:5000/vendor/update/${id}`, body)
+                    setPersonalDetails({
+                        name: "",
+                        vid: "",
+                        phone: "",
+                        address: "",
+                        email: ""
+                    })
+                    setProduct([{ "pid": '', "pcode": '', "pname": '', "type": '' }])
+                    setToggle(!toggle)
+                    handleClose();
+                } catch (error) {
+                    if (error.response.data.name == "duplicate") {
+                        setErrorMsg(error.response.data.msg)
+                        handleError()
+                    }
+                    console.log(error.response.data)
+                }
             }
         } else {
             setErrorMsg("Please Fill all fields")

@@ -10,7 +10,7 @@ const createVendor = async (req, res) => {
             .then(data => res.status(200).send({ data: data }))
             .catch(err => {
                 if (err.code == 11000) {
-                    res.status(500).send({name:"duplicate" , msg : "Vendor ID is already taken"})
+                    res.status(500).send({ name: "duplicate", msg: "Vendor ID is already taken" })
                 }
                 else {
 
@@ -28,7 +28,16 @@ const updateVendor = async (req, res) => {
         let id = req.params.id;
 
         updateDetails(id, req, (err, vendor) => {
-            if (err) return res.status(500).send(err);
+            if (err) {
+                if (err.code == 11000) {
+                    res.status(500).send({ name: "duplicate", msg: "Vendor ID is already taken" })
+                }
+                else {
+
+                    res.status(500).send(err)
+                }
+                // return res.status(500).send(err)
+            };
             res.status(200).send(vendor);
         })
     }
