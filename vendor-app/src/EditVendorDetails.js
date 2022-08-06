@@ -1,5 +1,4 @@
 
-import Modal from '@mui/material/Modal';
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
@@ -19,11 +18,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import RemoveCircleIcon from '@mui/icons-material/AddReaction';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
@@ -59,13 +55,6 @@ const theme = createTheme();
 
 const EditVendorDetails = ({ id, toggle, setToggle }) => {
     let navigate = useNavigate();
-    const [birthday, setBirthday] = useState(new Date());
-    const [address, setAddress] = useState();
-    const [mobile, setMobile] = useState();
-    const [departmentDetails, setDepartmentDetails] = useState(["Select"]);
-    const [department, setDepartment] = useState("");
-    const [designationDetails, setDesignationDetails] = useState([]);
-    const [designation, setDesignation] = useState("");
     const [error, setError] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -85,85 +74,25 @@ const EditVendorDetails = ({ id, toggle, setToggle }) => {
         const { name, value } = e.target;
         setPersonalDetails({ ...personalDetails, [name]: value });
     };
-
-    const handleAddressChange = (e, index) => {
-        const { name, value } = e.target;
-        const list = [...address];
-        list[index][name] = value;
-        setAddress(list);
-    };
-
-    const handleMobileChange = (e, index) => {
-        const { name, value } = e.target;
-        const list = [...mobile];
-        list[index][name] = value;
-        setMobile(list);
-    };
-
-    const handleChange = async (event) => {
-        setDepartment(event.target.value);
-        let dept = event.target.value;
-        const result = await axios.get(`http://localhost:5000/departments/${dept}`)
-        setDesignationDetails(result.data)
-
-    };
-    const handleChangeDes = async (event) => {
-        setDesignation(event.target.value);
-    };
-    const handleAddAddress = () => {
-        setAddress([...address, { "address": "" }]);
-    };
-    const handleRemoveAddress = (index) => {
-        const list = [...address];
-        list.splice(index, 1);
-        setAddress(list);
-    };
-
-    const handleAddMobile = () => {
-        setMobile([...mobile, { "mobile": "" }]);
-    };
-    const handleRemoveMobile = (index) => {
-        const list = [...mobile];
-        list.splice(index, 1);
-        setMobile(list);
-    };
-
-
     useEffect(() => {
-        console.log("idddd", id)
         if (id) {
             getVendorDetails()
-            // getDepartments()
         }
 
     }, []);
-    async function setDesignationMenu(dept) {
-        // const result = await axios.get(`http://localhost:5000/departments/${dept}`)
-        // setDesignationDetails(result.data)
-    }
+
     async function getVendorDetails() {
-        console.log("id", id)
         const result = await axios.get(`http://localhost:5000/vendor/${id}`)
-        console.log("resss", result)
-        // setDesignationMenu(result.data[0].department)
-        // setDepartment(result.data[0].department)
-        // setDesignation(result.data[0].designation)
 
         setPersonalDetails({
             ...personalDetails,
             name: result.data[0].name,
             email: result.data[0].email,
             phone: result.data[0].contactNo,
-            address: result.data[0].contactNo,
+            address: result.data[0].address,
             vid: result.data[0].vendorId,
         });
         setProduct(result.data[0].product)
-        // setMobile(result.data[0].mobile)
-    }
-
-    async function getDepartments() {
-        const result = await axios.get(`http://localhost:5000/departments/`)
-        setDepartmentDetails(result.data)
     }
 
     const handleSubmit = async (event) => {
@@ -179,10 +108,8 @@ const EditVendorDetails = ({ id, toggle, setToggle }) => {
                 email: personalDetails.email,
                 product: product,
             }
-            console.log("body", body)
             try {
                 const result = await axios.put(`http://localhost:5000/vendor/update/${id}`, body)
-                console.log("result", result)
                 setPersonalDetails({
                     name: "",
                     vid: "",
@@ -238,7 +165,6 @@ const EditVendorDetails = ({ id, toggle, setToggle }) => {
     const handleProductChange = (e, index) => {
         const { name, value } = e.target;
         const list = [...product];
-        console.log("first", name, value, list)
         list[index][name] = value;
         setProduct(list);
     };

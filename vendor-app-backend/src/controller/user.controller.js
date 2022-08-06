@@ -19,7 +19,6 @@ const createUser = async (req, res) => {
                             const user = new User(req.body);
                             await user.save()
                                 .then(data => {
-                                    console.log(data);
                                     res.status(200).send(data);
                                 })
                                 .catch(err => {
@@ -29,7 +28,6 @@ const createUser = async (req, res) => {
                         });
                     });
                 } else {
-                    console.log("User Already Exist");
                     res.send({ message: "User Already Exist" });
                 }
             }
@@ -39,7 +37,6 @@ const createUser = async (req, res) => {
 
 //login Validate
 const validateUser = async (req, res) => {
-    console.log(req);
     await User.findOne({ email: req.body.email }, (err, users) => {
         if (err) {
             console.log(err);
@@ -48,10 +45,8 @@ const validateUser = async (req, res) => {
             if (users == null) return res.status(500).send("User Not Found");
             bcrypt.compare(req.body.password, users.password, function (err, result) {
                 if (result) {
-                    console.log(users);
                     res.send(users);
                 } else {
-                    console.log("Credentials Does Not Matched");
                     res.status(500).send("Credentials Does Not Matched");
                 }
             });
@@ -77,11 +72,9 @@ const getAllUser = async (req, res) => {
 const getUserById = async (req, res) => {
     await User.find({ _id: req.params.id }, (err, result) => {
         if (err) {
-            console.log(err);
             res.status(500).send(err);
         } else {
             res.send(result);
-            console.log(result);
         }
     })
 };

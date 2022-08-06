@@ -66,13 +66,7 @@ const Home = () => {
     address: "",
     email: ""
   })
-  const [birthday, setBirthday] = useState(new Date());
   const [product, setProduct] = useState([{ "pid": '', "pcode": '', "pname": '', "type": 'raw-material' }]);
-  const [mobile, setMobile] = useState([{ "mobile": '' }]);
-  const [departmentDetails, setDepartmentDetails] = useState(["Select"]);
-  const [department, setDepartment] = useState("");
-  const [designationDetails, setDesignationDetails] = useState([]);
-  const [designation, setDesignation] = useState("");
   const [error, setError] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState("");
   const [open, setOpen] = React.useState(false);
@@ -85,28 +79,10 @@ const Home = () => {
   const handleProductChange = (e, index) => {
     const { name, value } = e.target;
     const list = [...product];
-    console.log("first", name, value, list)
     list[index][name] = value;
     setProduct(list);
   };
 
-  const handleMobileChange = (e, index) => {
-    const { name, value } = e.target;
-    const list = [...mobile];
-    list[index][name] = value;
-    setMobile(list);
-  };
-
-  const handleChange = async (event) => {
-    setDepartment(event.target.value);
-    let dept = event.target.value;
-    const result = await axios.get(`http://localhost:5000/departments/${dept}`)
-    setDesignationDetails(result.data)
-
-  };
-  const handleChangeDes = async (event) => {
-    setDesignation(event.target.value);
-  };
   const handleAddProduct = () => {
     setProduct([...product, { "pid": '', "pcode": '', "pname": '', "type": '' }]);
   };
@@ -114,15 +90,6 @@ const Home = () => {
     const list = [...product];
     list.splice(index, 1);
     setProduct(list);
-  };
-
-  const handleAddMobile = () => {
-    setMobile([...mobile, { "mobile": "" }]);
-  };
-  const handleRemoveMobile = (index) => {
-    const list = [...mobile];
-    list.splice(index, 1);
-    setMobile(list);
   };
 
   useEffect(() => {
@@ -133,13 +100,6 @@ const Home = () => {
     }
   }, []);
 
-  useEffect(() => {
-    getDepartments()
-    async function getDepartments() {
-      const result = await axios.get(`http://localhost:5000/departments/`)
-      setDepartmentDetails(result.data)
-    }
-  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -159,10 +119,8 @@ const Home = () => {
           email: personalDetails.email,
           product: product,
         }
-        console.log("body", body)
         try {
           const result = await axios.post(`http://localhost:5000/vendor/create`, body)
-          console.log("result", result)
           setPersonalDetails({
             name: "",
             vid: "",
@@ -170,11 +128,7 @@ const Home = () => {
             address: "",
             email: ""
           })
-          setBirthday(new Date())
           setProduct([{ "pid": '', "pcode": '', "pname": '', "type": '' }])
-          setMobile([{ "mobile": '' }])
-          setDesignation("")
-          setDepartment("")
           handleClick();
 
         } catch (error) {

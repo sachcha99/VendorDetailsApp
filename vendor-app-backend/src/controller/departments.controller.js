@@ -37,7 +37,6 @@ const getDesignationsByDepartment = async (req, res) => {
             res.status(500).send(err);
         } else {
             res.send(result[0].designations);
-            console.log(result);
         }
     })
 };

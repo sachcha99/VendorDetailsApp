@@ -14,25 +14,11 @@ import EditVendorDetails from './EditVendorDetails';
 import BgImage from './images/bg-img.jpg'
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import DeleteVendor from './DeleteVendor';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import TextField from '@mui/material/TextField'; 
 import SearchIcon from '@mui/icons-material/Search';
-// const Transition = React.forwardRef(function Transition(
-//     props: TransitionProps & {
-//         children: React.ReactElement;
-//     },
-//     ref: React.Ref,
-// ) {
-//     return <Slide direction="up" ref={ref} {...props} />;
-// });
 
 const Alert = React.forwardRef(function Alert(
     props,
@@ -77,7 +63,6 @@ const VendorDetails = () => {
     async function getVendorDetails() {
         try {
             const result = await axios.get(`http://localhost:5000/vendor/`)
-            console.log("res", result.data)
             setVendorDetails(result.data)
         } catch (error) {
 
@@ -89,7 +74,6 @@ const VendorDetails = () => {
         if (searchText) {
             try {
                 const result = await axios.get(`http://localhost:5000/vendor/search/${searchText}`)
-                console.log("res", result.data)
                 setVendorDetails(result.data)
             } catch (error) {
 
@@ -129,12 +113,6 @@ const VendorDetails = () => {
                             justifyContent: 'center'
                         }}
                     >
-
-                        {/* <SearchBar
-                            value={searchText}
-                            onChange={(newValue) => setSearchText(newValue)}
-                            onRequestSearch={() => searchVendor()}
-                        /> */}
                         <TextField onKeyDown={handleKeyDown} id="filled-basic" label="Search Vendor" variant="filled" value={searchText}  onChange={(e) => setSearchText(e.target.value)} />
                         <div onClick={() => searchVendor()} style={{ cursor: "pointer" }}>
                             <SearchIcon />
@@ -215,10 +193,6 @@ const VendorDetails = () => {
                                             margin: "3px",
                                             padding: "4px",
                                             borderRadius: "5px"
-                                            //  width:"50px",
-                                            //  flex: "50%"
-                                            // display: 'flex',
-                                            // justifyContent: 'space-evenly',
                                         }}>
                                             <Typography variant="body1" >
                                                 <span style={{ fontWeight: 'bold' }}>Product ID</span> : {pro.pid}

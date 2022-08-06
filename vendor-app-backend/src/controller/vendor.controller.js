@@ -43,7 +43,6 @@ function updateDetails(id, req, callback) {
                     return callback(err);
                 } else {
                     var vendor = result;
-                    console.log(vendor);
                     return callback(null, vendor);
                 }
             });
@@ -70,7 +69,6 @@ const deleteVendor = async (req, res) => {
     if (req.params.id) {
         await Vendor.findByIdAndDelete(req.params.id, (err, result) => {
             if (err) return res.status(500).send(err);
-            console.log(result);
             return res.status(200).send(result);
         });
     }
@@ -84,7 +82,6 @@ const getVendorById = async (req, res) => {
             res.status(500).send(err);
         } else {
             res.send(result);
-            console.log(result);
         }
     })
 };
