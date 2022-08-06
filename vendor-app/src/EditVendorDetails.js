@@ -18,7 +18,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import RemoveCircleIcon from '@mui/icons-material/AddReaction';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import InputLabel from '@mui/material/InputLabel';
