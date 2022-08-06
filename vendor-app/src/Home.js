@@ -32,6 +32,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormLabel from '@mui/material/FormLabel';
+import validator from 'validator';
 const Alert = React.forwardRef(function Alert(
   props,
   ref,
@@ -143,36 +144,48 @@ const Home = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    if (data.get('name') && data.get('vid') && data.get('address') && data.get('phone') && data.get('email') && product ) {
-      let body = {
-        name: personalDetails.name,
-        vendorId: personalDetails.vid,
-        registeredDate: new Date(),
-        contactNo: personalDetails.phone,
-        address: personalDetails.address,
-        email: personalDetails.email,
-        product: product,
+
+    if (data.get('name') && data.get('vid') && data.get('address') && data.get('phone') && data.get('email') && product) {
+      if (!validator.isEmail(data.get('email'))) {
+        setErrorMsg("Enter valid email address")
+        handleError()
+      } else {
+        let body = {
+          name: personalDetails.name,
+          vendorId: personalDetails.vid,
+          registeredDate: new Date(),
+          contactNo: personalDetails.phone,
+          address: personalDetails.address,
+          email: personalDetails.email,
+          product: product,
+        }
+        console.log("body", body)
+        try {
+          const result = await axios.post(`http://localhost:5000/vendor/create`, body)
+          console.log("result", result)
+          setPersonalDetails({
+            name: "",
+            vid: "",
+            phone: "",
+            address: "",
+            email: ""
+          })
+          setBirthday(new Date())
+          setProduct([{ "pid": '', "pcode": '', "pname": '', "type": '' }])
+          setMobile([{ "mobile": '' }])
+          setDesignation("")
+          setDepartment("")
+          handleClick();
+
+        } catch (error) {
+          if (error.response.data.name == "duplicate") {
+            setErrorMsg(error.response.data.msg)
+            handleError()
+          }
+          console.log(error)
+        }
       }
-      console.log("body",body)
-      try {
-        const result = await axios.post(`http://localhost:5000/vendor/create`, body)
-        console.log("result",result)
-        setPersonalDetails({
-          name: "",
-          vid: "",
-          phone: "",
-          address: "",
-          email : ""
-        })
-        setBirthday(new Date())
-        setProduct([{ "pid": '', "pcode": '', "pname": '', "type": '' }])
-        setMobile([{ "mobile": '' }])
-        setDesignation("")
-        setDepartment("")
-        handleClick();
-      } catch (error) {
-        console.log(error)
-      }
+
     } else {
       setErrorMsg("Please Fill all fields")
       handleError()
@@ -221,7 +234,7 @@ const Home = () => {
           <Snackbar open={error} autoHideDuration={6000} onClose={handleCloseError}>
             <Alert onClose={handleCloseError} severity="error">{errorMsg}</Alert>
           </Snackbar>
-          <Container component="main" maxWidth="xs">
+          <Container component="main" maxWidth="xs" style={{}}>
             <CssBaseline />
             <Box
               sx={{
@@ -229,6 +242,8 @@ const Home = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                backgroundColor: "rgba(255, 255, 255, 0.75)",
+                padding: "10px",
               }}
             >
               <Avatar sx={{ m: 1, bgcolor: 'blue' }}>
@@ -305,7 +320,7 @@ const Home = () => {
                   {product.map((singleProduct, i) => (
                     <div key={i} style={{ display: "flex", justifyContent: "center", }}>
                       <div style={{ display: "flex", justifyContent: "center", marginTop: "10px", }}>
-                        <Grid key={i} item xs={10} style={{ backgroundColor: "#fefefe", padding: "10px", marginTop: "10px",borderRadius:"10px" }}>
+                        <Grid key={i} item xs={10} style={{ backgroundColor: "#fefefe", padding: "10px", marginTop: "10px", borderRadius: "10px" }}>
                           <Grid style={{ display: 'flex' }} item xs={12}>
                             <TextField
                               style={{ margin: '4px' }}

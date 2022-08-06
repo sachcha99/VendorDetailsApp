@@ -38,7 +38,7 @@ const NavBar = ({ user }) => {
 
   return (
     <div>
-      <AppBar sx={{ backgroundColor: "#61bcc0", zIndex: 10000 }} position="static">
+      <AppBar sx={{ backgroundColor: "rgba(189, 77, 0, 0.67)", zIndex: 10000 }} position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: 'black' }} />

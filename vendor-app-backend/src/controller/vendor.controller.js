@@ -8,7 +8,15 @@ const createVendor = async (req, res) => {
 
         await vendor.save()
             .then(data => res.status(200).send({ data: data }))
-            .catch(err => res.status(500).send(err));
+            .catch(err => {
+                if (err.code == 11000) {
+                    res.status(500).send({name:"duplicate" , msg : "Vendor ID is already taken"})
+                }
+                else {
+
+                    res.status(500).send(err)
+                }
+            });
 
     }
 }

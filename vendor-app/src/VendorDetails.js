@@ -22,8 +22,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import DeleteVendor from './DeleteVendor';
-import SearchBar from "material-ui-search-bar";
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import TextField from '@mui/material/TextField'; 
+import SearchIcon from '@mui/icons-material/Search';
 // const Transition = React.forwardRef(function Transition(
 //     props: TransitionProps & {
 //         children: React.ReactElement;
@@ -43,7 +44,7 @@ const VendorDetails = () => {
 
     const [userDetails, setUserDetails] = useState()
     const [toggle, setToggle] = useState(false)
-    const [searchText, setSearchText] = useState()
+    const [searchText, setSearchText] = useState("")
     const [vendorDetails, setVendorDetails] = useState([])
     const [openSnackbar, setOpenSnackbar] = useState(false);
     let navigate = useNavigate();
@@ -97,6 +98,11 @@ const VendorDetails = () => {
         }
     }
 
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            searchVendor()
+        }
+    }
 
     return (
         <>
@@ -106,6 +112,7 @@ const VendorDetails = () => {
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
+                height: "100%",
             }}>
 
                 <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
@@ -123,11 +130,15 @@ const VendorDetails = () => {
                         }}
                     >
 
-                        <SearchBar
+                        {/* <SearchBar
                             value={searchText}
                             onChange={(newValue) => setSearchText(newValue)}
                             onRequestSearch={() => searchVendor()}
-                        />
+                        /> */}
+                        <TextField onKeyDown={handleKeyDown} id="filled-basic" label="Search Vendor" variant="filled" value={searchText}  onChange={(e) => setSearchText(e.target.value)} />
+                        <div onClick={() => searchVendor()} style={{ cursor: "pointer" }}>
+                            <SearchIcon />
+                        </div>
                         <div onClick={() => getVendorDetails()} style={{ cursor: "pointer" }}>
                             <RestartAltIcon color="primary" />
                         </div>
